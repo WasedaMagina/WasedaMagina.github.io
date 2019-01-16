@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="课程作业,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="In image processing, Discrete Fourier Transformation is a very useful method. However, its formula is so complicated that it is difficult to understand. As a result, I intend to deepen my understandin">
+<meta name="keywords" content="课程作业">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Use python to implement Discrete Fourier transform">
+<meta property="og:url" content="http://yoursite.com/2018/01/30/dft/index.html">
+<meta property="og:site_name" content="Magina的个人小站">
+<meta property="og:description" content="In image processing, Discrete Fourier Transformation is a very useful method. However, its formula is so complicated that it is difficult to understand. As a result, I intend to deepen my understandin">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://ozaeyj71y.bkt.clouddn.com/image/dft/output_3_0.png">
+<meta property="og:image" content="http://ozaeyj71y.bkt.clouddn.com/image/dft/output_8_0.png">
+<meta property="og:image" content="http://ozaeyj71y.bkt.clouddn.com/image/dft/output_15_0.png">
+<meta property="og:image" content="http://ozaeyj71y.bkt.clouddn.com/image/dft/output_21_0.png">
+<meta property="og:image" content="http://ozaeyj71y.bkt.clouddn.com/image/dft/output_24_0.png">
+<meta property="og:updated_time" content="2018-04-23T17:12:03.478Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Use python to implement Discrete Fourier transform">
+<meta name="twitter:description" content="In image processing, Discrete Fourier Transformation is a very useful method. However, its formula is so complicated that it is difficult to understand. As a result, I intend to deepen my understandin">
+<meta name="twitter:image" content="http://ozaeyj71y.bkt.clouddn.com/image/dft/output_3_0.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/30/dft/">
+
+
+
+
+
+  <title>Use python to implement Discrete Fourier transform | Magina的个人小站</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?27b0304965fa090d10656dd146089b41";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Magina的个人小站</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/30/dft/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Magina">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/Pic.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Magina的个人小站">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Use python to implement Discrete Fourier transform</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-30T00:58:05+08:00">
+                2018-01-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Report/" itemprop="url" rel="index">
+                    <span itemprop="name">Report</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>In image processing, Discrete Fourier Transformation is a very useful method. However, its formula is so complicated that it is difficult to understand. As a result, I intend to deepen my understanding of it by implementing it. Since I am not familiar with c or c++, I use python to do this task. During the task, I realize that the efficiency of my method is not as good as I thought, so I use several methods to improve it. The goal of my work is implementing the Discrete Fourier Transformation(DFT) in the most efficient way in python.</p>
+<p>In this report, I would like to show my work in the following aspects:</p>
+<ol>
+<li>Introduction of Discrete Fourier Transformation.</li>
+<li>Introduction of my experiment.</li>
+<li>Implement the DFT with standard formula.</li>
+<li>Implement the DFT with Euler’s formula.</li>
+<li>Implement the DFT with matrix.</li>
+<li>The principle of Fast Fourier Transform(FFT).</li>
+<li>Conclusion.</li>
+</ol>
+<h3 id="1-Introduction-of-Discrete-Fourier-Transformation"><a href="#1-Introduction-of-Discrete-Fourier-Transformation" class="headerlink" title="1. Introduction of Discrete Fourier Transformation"></a>1. Introduction of Discrete Fourier Transformation</h3><p>In 1822, Fourier, a French scientist, pointed out that any periodic function can be expressed as a composition of sine and cosine in different frequencies. The posterity found that in some conditions, even non-periodic function can be expressed by sine and cosine. Following this idea, Fourier Transformation(FT) is produced.</p>
+<p>In image processing, the image data is discrete value. Based on the Fourier Transformation, Later researchers invent the Discrete Fourier Transformation(DFT) to hold the discrete value. Although the formula of FT and DFT is different, the principle of them is same. Therefore, we can use DFT to convert the image to a combine with sine and cosine. Even better, we could use the Inverse DFT to convert it back to image. As a result, DFT is very important in image processing.</p>
+<h3 id="2-Introduction-to-my-experiment"><a href="#2-Introduction-to-my-experiment" class="headerlink" title="2. Introduction to my experiment"></a>2. Introduction to my experiment</h3><h4 id="2-1-Purpose"><a href="#2-1-Purpose" class="headerlink" title="2.1 Purpose"></a>2.1 Purpose</h4><p>I aim to use python to implement the DFT in the most efficient way. In this report, I implement the DFT in different ways and I would give the comparison of them.</p>
+<h4 id="2-2-Programming-environment"><a href="#2-2-Programming-environment" class="headerlink" title="2.2 Programming environment"></a>2.2 Programming environment</h4><p>The version of python is 3.6, IDE is jupyter notebook.</p>
+<p>In my program, I use three libraries.</p>
+<ol>
+<li>Opencv. I use this library to read image from folder.</li>
+<li>Numpy. I use this library to do matrix computing.</li>
+<li>Matplotlib. I use this library to show my results in picture.</li>
+</ol>
+<p>(If researches have the same version python with libraries that I mentioned before, they can copy my code to jupyter notebook and run it to check my work.)</p>
+<h4 id="2-3-Data-preparation"><a href="#2-3-Data-preparation" class="headerlink" title="2.3 Data preparation"></a>2.3 Data preparation</h4><p>I prepare two different sizes of classic image Lena to test my program. One is the original image and its size is 512*512. The other is shrank  image and its size is 50*50. Because the original  image size is too large to do the test. Some of the algorithms will be too slow to get a result.</p>
+<p>Before the experiment, I read images from my folder. Here is code and explanations. I use function imread to read image and plt to show my results. Variable lena saves the information of the original lena and lena50 saves the information of the small sizes lena image.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">lena = cv2.imread(<span class="string">"C:\lena.jpg"</span>,<span class="number">0</span>)   <span class="comment"># read image</span></span><br><span class="line">lena50 = cv2.imread(<span class="string">"C:\lena50.jpg"</span>,<span class="number">0</span>)</span><br><span class="line">plt.subplot(<span class="number">121</span>),plt.imshow(lena,<span class="string">'gray'</span>),plt.title(<span class="string">'lena_512*512'</span>)</span><br><span class="line">plt.subplot(<span class="number">122</span>),plt.imshow(lena50,<span class="string">'gray'</span>),plt.title(<span class="string">'lena_50*50'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://ozaeyj71y.bkt.clouddn.com/image/dft/output_3_0.png" alt="png"></p>
+<h4 id="2-4-The-steps-of-evaluating-the-result-of-method"><a href="#2-4-The-steps-of-evaluating-the-result-of-method" class="headerlink" title="2.4 The steps of evaluating the result of method."></a>2.4 The steps of evaluating the result of method.</h4><p>I evaluate my result by following steps:</p>
+<ol>
+<li>Get result from my function.</li>
+<li>Get the standard answer from numpy’s fft funtion.</li>
+<li>Print out the result of each function.</li>
+<li>Check the picture to see whether they are same or not.</li>
+<li>Use allclose to check the result of my function whether correct or not.</li>
+<li>For each function, use timeit function to calculate the cost of time.</li>
+</ol>
+<h3 id="3-Implement-the-DFT-with-standard-formula"><a href="#3-Implement-the-DFT-with-standard-formula" class="headerlink" title="3. Implement the DFT with standard formula."></a>3. Implement the DFT with standard formula.</h3><h4 id="3-1-How-to-implement-it"><a href="#3-1-How-to-implement-it" class="headerlink" title="3.1 How to implement it."></a>3.1 How to implement it.</h4><p>The standard formula of the DFT is:<br>$$<br>F(u,v)= \sum_{x=0}^{M-1}\sum_{y=0}^{N-1}f(x,y)e^{-j2\pi(ux/M+vy/N)}<br>$$<br>$f(x,y)$ means the pixel value. $M$ and $N$ is the length and width of the image$f(x,y)$.</p>
+<p>We can get several information from this formula:</p>
+<ol>
+<li>The output of Fourier Transformation is a complex matrix.</li>
+<li>Each pixel in the output is the sum of input pixel multiply a complicated formula.</li>
+</ol>
+<p>Based on these information, I start coding.<br>First, I use the shape function get the row and column information from input image.<br>Second, I build a complex matrix with same dimension of the input image.<br>Finally, I use four loops to implement the Fourier Transformation. Here is the code:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dft</span><span class="params">(input_img)</span>:</span></span><br><span class="line">    rows = input_img.shape[<span class="number">0</span>]</span><br><span class="line">    cols = input_img.shape[<span class="number">1</span>]</span><br><span class="line">    output_img = np.zeros((rows,cols),complex)</span><br><span class="line">    <span class="keyword">for</span> m <span class="keyword">in</span> range(<span class="number">0</span>,rows):</span><br><span class="line">        <span class="keyword">for</span> n <span class="keyword">in</span> range(<span class="number">0</span>,cols):</span><br><span class="line">            <span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">0</span>,rows):</span><br><span class="line">                <span class="keyword">for</span> y <span class="keyword">in</span> range(<span class="number">0</span>,cols):</span><br><span class="line">                    output_img[m][n] += input_img[x][y] * np.exp(<span class="number">-1j</span>*<span class="number">2</span>*math.pi*(m*x/rows+n*y/cols))</span><br><span class="line">    <span class="keyword">return</span> output_img</span><br></pre></td></tr></table></figure>
+<h4 id="3-2-Result"><a href="#3-2-Result" class="headerlink" title="3.2 Result"></a>3.2 Result</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">dft_lena50 = dft(lena50)</span><br><span class="line">out_dft = np.log(np.abs(dft_lena50))</span><br><span class="line">fft_lena50 = np.fft.fft2(lena50)</span><br><span class="line">out_fft = np.log(np.abs(fft_lena50))</span><br><span class="line"></span><br><span class="line">plt.subplot(<span class="number">121</span>),plt.imshow(out_dft,<span class="string">'gray'</span>),plt.title(<span class="string">'dft_output'</span>)</span><br><span class="line">plt.subplot(<span class="number">122</span>),plt.imshow(out_fft,<span class="string">'gray'</span>),plt.title(<span class="string">'np.fft_output'</span>)</span><br><span class="line">plt.show()</span><br><span class="line">np.allclose(dft_lena50,fft_lena50)</span><br></pre></td></tr></table></figure>
+<p><img src="http://ozaeyj71y.bkt.clouddn.com/image/dft/output_8_0.png" alt="png"></p>
+<pre><code>True
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%timeit dft_lena50 = dft(lena50)</span><br><span class="line">%timeit fft_lena50 = np.fft.fft2(lena50)</span><br></pre></td></tr></table></figure>
+<pre><code>26.3 s ± 574 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+96.1 µs ± 1.98 µs per loop (mean ± std. dev. of 7 runs, 10000 loops each)
+</code></pre><h4 id="3-3-Result-analysis"><a href="#3-3-Result-analysis" class="headerlink" title="3.3 Result analysis"></a>3.3 Result analysis</h4><p>We can see that the output image of dft is as same as the np.fft_output. And the result of np.allclose is true which means that each value in matrix dft_lena50 and fft_lena50 is equal. Therefore, I have already implemented the DFT. </p>
+<p>However,my method cost so much time. At the beginning, I use original image(size 512*512) to do the test and I even can not get the result. After changing the size of it, I can get result. It is still too slow. By using my function, it costs 26.3 seconds in average. But by using the function in numpy, it costs only 96.1 us in average. As a result, I figure out two ways to improve my code. First, I think that the exponential calculation in the loop will consume a lot of computing resources, so I use Euler’s formula to convert the exponent calculation into addition calculation.</p>
+<h3 id="4-Implement-the-DFT-with-Euler’s-formula"><a href="#4-Implement-the-DFT-with-Euler’s-formula" class="headerlink" title="4. Implement the DFT with Euler’s formula."></a>4. Implement the DFT with Euler’s formula.</h3><h4 id="4-1-How-to-implement-it"><a href="#4-1-How-to-implement-it" class="headerlink" title="4.1 How to implement it."></a>4.1 How to implement it.</h4><p>I use Euler’s formula to change the exponent calculation into addition calculation. Than I get a new formula:<br>$$<br>F(u,v)= \sum_{x=0}^{M-1}\sum_{y=0}^{N-1}f(x,y)*(\cos(-2\pi(ux/M+vy/N))+j\sin(-2\pi(ux/M+vy/N)))<br>$$<br>Implement is very simple. I just change one row in dft then I get dft_ol function. </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dft_ol</span><span class="params">(input_img)</span>:</span></span><br><span class="line">    rows = input_img.shape[<span class="number">0</span>]</span><br><span class="line">    cols = input_img.shape[<span class="number">1</span>]</span><br><span class="line">    output_img = np.zeros((rows,cols),complex)</span><br><span class="line">    <span class="keyword">for</span> m <span class="keyword">in</span> range(<span class="number">0</span>,rows):</span><br><span class="line">        <span class="keyword">for</span> n <span class="keyword">in</span> range(<span class="number">0</span>,cols):</span><br><span class="line">            <span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">0</span>,rows):</span><br><span class="line">                <span class="keyword">for</span> y <span class="keyword">in</span> range(<span class="number">0</span>,cols):</span><br><span class="line">                    w = <span class="number">-2</span>*math.pi*(m*x/rows+n*y/cols)</span><br><span class="line">                    output_img[m][n] += input_img[x][y] * (math.cos(w) + <span class="number">1j</span>*math.sin(w))</span><br><span class="line">    <span class="keyword">return</span> output_img</span><br></pre></td></tr></table></figure>
+<h4 id="4-2-Result"><a href="#4-2-Result" class="headerlink" title="4.2 Result"></a>4.2 Result</h4><p>Then, I did the same evaluation of it. Here is the result:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">dftol_lena50 = dft_ol(lena50)</span><br><span class="line">out_dftol = np.log(np.abs(dftol_lena50))</span><br><span class="line">fft_lena50 = np.fft.fft2(lena50)</span><br><span class="line">out_fft = np.log(np.abs(fft_lena50))</span><br><span class="line"></span><br><span class="line">plt.subplot(<span class="number">121</span>),plt.imshow(out_dftol,<span class="string">'gray'</span>),plt.title(<span class="string">'dftol_output'</span>)</span><br><span class="line">plt.subplot(<span class="number">122</span>),plt.imshow(out_fft,<span class="string">'gray'</span>),plt.title(<span class="string">'np.fft_output'</span>)</span><br><span class="line">plt.show()</span><br><span class="line">np.allclose(dftol_lena50,fft_lena50)</span><br></pre></td></tr></table></figure>
+<p><img src="http://ozaeyj71y.bkt.clouddn.com/image/dft/output_15_0.png" alt="png"></p>
+<pre><code>True
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%timeit dftol_lena50 = dft_ol(lena50)</span><br><span class="line">%timeit fft_lena50 = np.fft.fft2(lena50)</span><br></pre></td></tr></table></figure>
+<pre><code>21.8 s ± 84 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+91.7 µs ± 855 ns per loop (mean ± std. dev. of 7 runs, 10000 loops each)
+</code></pre><h4 id="4-3-Result-analysis"><a href="#4-3-Result-analysis" class="headerlink" title="4.3 Result analysis"></a>4.3 Result analysis</h4><p>We could see that the result is correct. Although the average time is a little bit shorter than before(21.8s in average), it is still not acceptable.</p>
+<p>I think the problem is I used four loops in my code. In python, the efficiency of loop is low so I wander that is there any possibility to replace the loops? I check the formula again. The input of it is a matrix and the output of it is also a matrix. If we apply numpy library to do matrix computing, efficiency of calculating is high. Therefore I tried to write the formula in matrix way.</p>
+<h3 id="5-Implement-the-DFT-with-matrix"><a href="#5-Implement-the-DFT-with-matrix" class="headerlink" title="5. Implement the DFT with matrix."></a>5. Implement the DFT with matrix.</h3><h4 id="5-1-How-to-implement-it"><a href="#5-1-How-to-implement-it" class="headerlink" title="5.1 How to implement it."></a>5.1 How to implement it.</h4><p>The image data is a two dimension matrix. Imply the DFT on two dimension data is a 2D-DFT problem.</p>
+<p>The 2D-DFT can write in two 1D-DFT:<br>$$<br>F(u,v)=\sum_{x=0}^{M-1}e^{-j2\pi ux/M}\sum_{y=0}^{N-1}f(x,y)e^{-j2\pi vy/N}=\sum_{x=0}^{M-1}F(x,v)e^{-j2\pi ux/M}<br>$$</p>
+<p>$$<br>F(x,v) =\sum_{y=0}^{N-1}f(x,y)e^{-j2\pi vy/N}<br>$$</p>
+<p>and the 1D-DFT is easy to write in matrix way:<br>$$<br>F(x,v) = M\vec x<br>$$</p>
+<p>$$<br>M = e^{-j2\pi \vec v \vec y/N}<br>$$</p>
+<p>$\vec x $ means each row vectors of $f(x,y)$, $\vec v$ is a column vector $(0,1,2，\cdots，N-1)^T$,$\vec y$ is a row vector$(0,1,2，\cdots，N-1)$. </p>
+<p>For 2D-Fourier Transformation , we just need to do the 1D-DFT for each row of input and do 1D-DFT for each column of the output from 1D-DFT for rows.</p>
+<p>I follow this new formula building the dft_matrix function.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dft_matrix</span><span class="params">(input_img)</span>:</span></span><br><span class="line">    rows = input_img.shape[<span class="number">0</span>]</span><br><span class="line">    cols = input_img.shape[<span class="number">1</span>]</span><br><span class="line">    t = np.zeros((rows,cols),complex)</span><br><span class="line">    output_img = np.zeros((rows,cols),complex)</span><br><span class="line">    m = np.arange(rows)</span><br><span class="line">    n = np.arange(cols)</span><br><span class="line">    x = m.reshape((rows,<span class="number">1</span>))</span><br><span class="line">    y = n.reshape((cols,<span class="number">1</span>))</span><br><span class="line">    <span class="keyword">for</span> row <span class="keyword">in</span> range(<span class="number">0</span>,rows):</span><br><span class="line">        M1 = <span class="number">1j</span>*np.sin(<span class="number">-2</span>*np.pi*y*n/cols) + np.cos(<span class="number">-2</span>*np.pi*y*n/cols)</span><br><span class="line">        t[row] = np.dot(M1, input_img[row])</span><br><span class="line">    <span class="keyword">for</span> col <span class="keyword">in</span> range(<span class="number">0</span>,cols):</span><br><span class="line">        M2 = <span class="number">1j</span>*np.sin(<span class="number">-2</span>*np.pi*x*m/cols) + np.cos(<span class="number">-2</span>*np.pi*x*m/cols)</span><br><span class="line">        output_img[:,col] = np.dot(M2, t[:,col])</span><br><span class="line">    <span class="keyword">return</span> output_img</span><br></pre></td></tr></table></figure>
+<h4 id="5-2-Result"><a href="#5-2-Result" class="headerlink" title="5.2 Result"></a>5.2 Result</h4><p>Also, I use the same flow to evaluate it. Here is the result:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">dftma_lena50 = dft_matrix(lena50)</span><br><span class="line">out_dftma = np.log(np.abs(dftma_lena50))</span><br><span class="line">fft_lena50 = np.fft.fft2(lena50)</span><br><span class="line">out_fftma = np.log(np.abs(fft_lena50))</span><br><span class="line"></span><br><span class="line">plt.subplot(<span class="number">121</span>),plt.imshow(out_dftma,<span class="string">'gray'</span>),plt.title(<span class="string">'dftma_output'</span>)</span><br><span class="line">plt.subplot(<span class="number">122</span>),plt.imshow(out_fftma,<span class="string">'gray'</span>),plt.title(<span class="string">'np.fft_output'</span>)</span><br><span class="line">plt.show()</span><br><span class="line">np.allclose(dftma_lena50,fft_lena50)</span><br></pre></td></tr></table></figure>
+<p><img src="http://ozaeyj71y.bkt.clouddn.com/image/dft/output_21_0.png" alt="png"></p>
+<pre><code>True
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%timeit dftma_lena50 = dft_matrix(lena50)</span><br><span class="line">%timeit fft_lena50 = np.fft.fft2(lena50)</span><br></pre></td></tr></table></figure>
+<pre><code>10.9 ms ± 196 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+92 µs ± 523 ns per loop (mean ± std. dev. of 7 runs, 10000 loops each)
+</code></pre><p>The result is correct and the time is much shorter than other functions. It costs only 10.9ms in average. I think it is fast enough so I give the original lena as input and run it to see the result.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">dftma_lena = dft_matrix(lena)</span><br><span class="line">out_dftma = np.log(np.abs(dftma_lena))</span><br><span class="line">fft_lena = np.fft.fft2(lena)</span><br><span class="line">out_fftma = np.log(np.abs(fft_lena))</span><br><span class="line"></span><br><span class="line">plt.subplot(<span class="number">121</span>),plt.imshow(out_dftma,<span class="string">'gray'</span>),plt.title(<span class="string">'dftma_output'</span>)</span><br><span class="line">plt.subplot(<span class="number">122</span>),plt.imshow(out_fftma,<span class="string">'gray'</span>),plt.title(<span class="string">'np.fft_output'</span>)</span><br><span class="line">plt.show()</span><br><span class="line">np.allclose(dftma_lena,fft_lena)</span><br></pre></td></tr></table></figure>
+<p><img src="http://ozaeyj71y.bkt.clouddn.com/image/dft/output_24_0.png" alt="png"></p>
+<pre><code>True
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%timeit dftma_lena = dft_matrix(lena)</span><br><span class="line">%timeit fft_lena = np.fft.fft2(lena)</span><br></pre></td></tr></table></figure>
+<pre><code>16.3 s ± 448 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+11.3 ms ± 151 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+</code></pre><h4 id="5-3-Result-analysis"><a href="#5-3-Result-analysis" class="headerlink" title="5.3 Result analysis"></a>5.3 Result analysis</h4><p>The result is correct but the time of calculation increase rapidly as the size of image increases. Although np.fft cost more time than before, it is not increase so rapidly. I check this online, the method that numpy used is called Fast Fourier Transformation(FFT). Since this function is not in the lecture so I did not implement it in my report but I studied its principle. </p>
+<h3 id="6-The-principle-of-Fast-Fourier-Transform-FFT"><a href="#6-The-principle-of-Fast-Fourier-Transform-FFT" class="headerlink" title="6. The principle of Fast Fourier Transform(FFT)."></a>6. The principle of Fast Fourier Transform(FFT).</h3><p>Since we can use two 1D-DFT to calculate the 2D-DFT, we only to improve the efficiency of 1D-DFT than we can improve the efficiency of 2D-DFT.</p>
+<p>For a 1D-DFT:<br>$$<br>F(u)=\sum_{x=0}^{M-1}f(x)W_{M}^{ux}<br>$$<br>if M is divisible by 2, we can write it in two parts:<br>$$<br>M = 2K \<br>F(u)=\sum_{x=0}^{K-1}f(2x)W_{K}^{ux} + \sum_{x=0}^{M-1}f(2x+1)W_{K}^{ux}W_{2K}^{ux}<br>$$<br>But in this formation the length of $F(u)$ is only a half as before. We need to calculate the other part of it:<br>$$<br>F(u+K) = \sum_{x=0}^{K-1}f(2x)W_{K}^{ux} - \sum_{x=0}^{M-1}f(2x+1)W_{K}^{ux}W_{2K}^{ux}<br>$$<br>This is called the symmetry of DFT. We only calculate half of DFT than we can got the result of whole DFT as soon as M is divisible by 2.</p>
+<p>Even better we can set $M=2^n$ , than we can divide the DFT into several small DFT and use the symmetry of DFT to reduce the amount of computation. This is the principle of FFT.</p>
+<p>Time complexity of FFT is $O(nlogn)$ , DFT is $O(n^2)$. Therefore, it is much faster than the DFT when the n is large.</p>
+<h3 id="7-Conclusion"><a href="#7-Conclusion" class="headerlink" title="7. Conclusion."></a>7. Conclusion.</h3><p>Here is the result of all functions:</p>
+<table>
+<thead>
+<tr>
+<th>Function name</th>
+<th>Input image</th>
+<th>Answer correct or not</th>
+<th>Time in average</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DFT with lecture’s formula</td>
+<td>Lena50</td>
+<td>True</td>
+<td>26.3 seconds</td>
+</tr>
+<tr>
+<td>DFT with Euler’s formula</td>
+<td>Lena50</td>
+<td>True</td>
+<td>21.8 seconds</td>
+</tr>
+<tr>
+<td>DFT with matrix</td>
+<td>Lena50</td>
+<td>True</td>
+<td>10.9 ms</td>
+</tr>
+<tr>
+<td>Numpy’s fft function</td>
+<td>Lena50</td>
+<td></td>
+<td>91.7 us</td>
+</tr>
+<tr>
+<td>DFT with matrix</td>
+<td>Lena</td>
+<td>True</td>
+<td>16.3 seconds</td>
+</tr>
+<tr>
+<td>Numpy’s fft function</td>
+<td>Lena</td>
+<td></td>
+<td>11.3 ms</td>
+</tr>
+</tbody>
+</table>
+<p>As a result, I think the most efficient way to implement Discrete Fourier transform(DFT) in Python is use matrix to replace the loops. It is much faster than other method. However, the </p>
+<p>After this report, I feel I understand the Discrete Fourier Transform deeper than before. Here are the conclusion of this task:</p>
+<ol>
+<li>The Fourier transform converts the image to a superposition of sine and cosine. It is not intuitive to imagine an image is a superposition of sine and cosine. However, if we treat all the pictures as an instant noodles, understanding the concept of Fourier Transformation will be much more easier. Images is an instant noodles, sine and cosine is the noodle in noodles. </li>
+<li>The reason why we use Fourier transform is someone like thick noodle and others like the thin noodle. Fourier Transformation is a method that decomposition the instant noodles into one and one different noodle. Then we can choose the most appropriate noodle for different people. In image processing, it means that in some conditions, we may be interested in high frequency items and sometimes we may need the low frequency items. We can use the Fourier Transformation to find the desire items.</li>
+<li>In python, it is very important to learn how to use an appropriate library. In this task, I use the matrix to replace the loops in function. I use the numpy library to do the matrix computing. With this help, I reduce the time from 21.8 seconds to 10.9ms. If I use the numpy’s FFT function directly, only cost 91.7us. Therefore, the efficiency of the functions in python library is very high. It is much more practical to find a corresponding library function when encounter a problem.</li>
+<li>If we can’t find the corresponding library, it would be better to use others programming language to implement it such as C or C++. Because, without the help of library, python is too slow. </li>
+</ol>
+<h3 id="8-Reference"><a href="#8-Reference" class="headerlink" title="8. Reference"></a>8. Reference</h3><p>[1] Gonzalez, Rafael C, &amp; Woods, Richard E. (1977). Digital image processing. <strong>Prentice Hall International</strong>,<em> </em>28*(4), 484 - 486.</p>
+<p>[2] 快速傅里叶变换（FFT）算法【详解】</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/课程作业/" rel="tag"># 课程作业</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/06/NN-1/" rel="next" title="深入理解神经网络">
+                <i class="fa fa-chevron-left"></i> 深入理解神经网络
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/21/CNN/" rel="prev" title="深入理解卷积神经网络(CNN)——基础理论">
+                深入理解卷积神经网络(CNN)——基础理论 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTU1MS84MTE1"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/Pic.jpg" alt="Magina">
+            
+              <p class="site-author-name" itemprop="name">Magina</p>
+              <p class="site-description motion-element" itemprop="description">你自由的样子，他们说你像疯子</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Introduction-of-Discrete-Fourier-Transformation"><span class="nav-number">1.</span> <span class="nav-text">1. Introduction of Discrete Fourier Transformation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Introduction-to-my-experiment"><span class="nav-number">2.</span> <span class="nav-text">2. Introduction to my experiment</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-Purpose"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 Purpose</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-Programming-environment"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 Programming environment</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-Data-preparation"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 Data preparation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-The-steps-of-evaluating-the-result-of-method"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 The steps of evaluating the result of method.</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Implement-the-DFT-with-standard-formula"><span class="nav-number">3.</span> <span class="nav-text">3. Implement the DFT with standard formula.</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-How-to-implement-it"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 How to implement it.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-Result"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 Result</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-Result-analysis"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 Result analysis</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Implement-the-DFT-with-Euler’s-formula"><span class="nav-number">4.</span> <span class="nav-text">4. Implement the DFT with Euler’s formula.</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-How-to-implement-it"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 How to implement it.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-Result"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 Result</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-Result-analysis"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 Result analysis</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Implement-the-DFT-with-matrix"><span class="nav-number">5.</span> <span class="nav-text">5. Implement the DFT with matrix.</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-How-to-implement-it"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 How to implement it.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-Result"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 Result</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-3-Result-analysis"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 Result analysis</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-The-principle-of-Fast-Fourier-Transform-FFT"><span class="nav-number">6.</span> <span class="nav-text">6. The principle of Fast Fourier Transform(FFT).</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-Conclusion"><span class="nav-number">7.</span> <span class="nav-text">7. Conclusion.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-Reference"><span class="nav-number">8.</span> <span class="nav-text">8. Reference</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Magina</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.3</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
