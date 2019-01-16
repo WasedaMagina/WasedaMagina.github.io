@@ -1,4 +1,11 @@
-# CNN经典结构解析（1）——VGG，Inception
+---
+title:  CNN经典结构解析（1）——VGG，Inception
+date: 2018-12-21 23:33:28
+tags: 深入理解深度学习算法
+categories: 学习心得
+mathjax: true
+---
+
 
 ### 前言
 
